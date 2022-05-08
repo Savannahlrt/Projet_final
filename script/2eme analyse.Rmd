@@ -1,0 +1,12 @@
+---
+title: "2eme analyse"
+author: "Savannah LAURENT"
+date: "07/05/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Cette section reste vide car je n'ai pas réussi à réaliser la manipulation pour générer cette seconde carte. 
