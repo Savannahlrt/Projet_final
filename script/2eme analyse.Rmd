@@ -1,0 +1,31 @@
+---
+title: "2eme analyse"
+author: "Savannah LAURENT"
+date: "07/05/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Je ne sais pas si c'était ce qui était demandé mais j'ai tout de même réalisé une carte. 
+
+```{r}
+library(sf)
+getwd()
+zone <- st_read("vote.gpkg", "zone")
+str("zone")
+zone$numBureau
+zone [zone$numBureau == 1,]
+zone [1,2]
+fusion <- st_union(zone)
+str(zone)
+plot(zone$geom)
+library(mapsf)
+mf_map(zone, type = "choro", border = NA,var = "aire")
+zone <- zone [zone$numBureau %in% seq(1,30),]
+summary(zone)
+mf_map(zone, type = "choro", pal = "Burg",
+       border = NA, var = "txVotants")
+```
