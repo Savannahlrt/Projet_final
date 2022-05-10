@@ -1,0 +1,74 @@
+---
+title: "1ere analyse"
+author: "Savannah LAURENT"
+date: "07/05/2022"
+output: 
+  html_document:
+    number_sections: yes
+    toc: yes
+  editor_options:
+    chunk_output_type: console
+  
+---
+
+À travers ce second script nous allons générer deux cartes :
+
+1. une carte de vote de la ville de Bondy
+2. une carte faite à partir d'une variable de carroyage
+   
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## CARTE DE VOTE
+
+Nous allons dans un premier temps importer les données nécéssaire à la génération de cette première carte. 
+
+```{r}
+library(linemap)
+library(sf)
+library(mapsf)
+data <- st_read("vote.gpkg", "jointure")
+```
+
+```{r}
+seuils <- c(0,25, 50, 75, 100, 125, 150, 175, 200, 300)
+palette <- mf_get_pal(n = c(5,2), pal = c("Mint", "Burg"))
+hist(data$txVotants, border = NA, breaks = seuils, right = F, col=palette, main = "", xlab = "", ylab="")
+mf_map(data,  var = "txVotants", breaks = seuils, pal = palette,border = NA, leg_pos = "n")
+mf_label(data, "txVotants")
+par(mar = c(2,2,2,2))
+```
+
+```{r}
+library(sf)
+getwd()
+zone <- st_read("vote.gpkg", "zone")
+str("zone")
+zone$numBureau
+zone [zone$numBureau == 1,]
+zone [1,2]
+fusion <- st_union(zone)
+str(zone)
+plot(zone$geom)
+library(mapsf)
+mf_map(zone, type = "choro", border = NA,var = "aire")
+zone <- zone [zone$numBureau %in% seq(1,30),]
+summary(zone)
+mf_map(zone, type = "choro", pal = "Burg",
+       border = NA, var = "txVotants")
+```
+
+
+
+## CARTE INSEE
+
+Nous pouvons générer une carte du carroyage de la ville de Bondy grâce à la fonction : mf_map
+
+```{r}
+library(mapsf)
+data <- st_read("insee.gpkg", "bondy")
+mf_map(data, type = "choro", pal = "Burg",
+       border = NA, var = "Men_pauv", leg_title = "Nb de ménages pauvres")
+mf_layout(title =  "Pauvreté à Bondy", credits = "INSEE Carroyage 200 m") 
+```
